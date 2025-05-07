@@ -1,0 +1,31 @@
+{
+  "name": "electron-web-scraper",
+  "version": "1.0.0",
+  "description": "A modular web scraper application built with Electron, featuring pagination, timeout configuration, link crawling, and more.",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "jest"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "cheerio": "^1.0.0",
+    "electron": "^28.1.0",
+    "puppeteer": "^19.11.1"
+  },
+  "devDependencies": {
+    "jest": "^27.0.6"
+  },
+  "keywords": [
+    "web scraper",
+    "electron",
+    "pagination",
+    "crawling",
+    "captcha"
+  ],
+  "author": "Your Name",
+  "license": "MIT"
+}

@@ -1,0 +1,17 @@
+node_modules
+
+src/utils/advanced-scraper.js
+src/utils/basic-scraper.js
+src/utils/captcha.js
+src/utils/crawler.js
+src/utils/manual-scraper.js
+
+src/results-tab/results.js
+src/results-tab/results.css
+src/results-tab/results.html
+
+src/scraper-tab/dash.js
+src/scraper-tab/dash.css
+src/scraper-tab/dash.html
+
+src/renderer.js

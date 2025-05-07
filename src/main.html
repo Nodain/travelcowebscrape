@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kneadle v1.2</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Top navigation tabs -->
+        <div class="app-header">
+            <div class="tabs-container">
+                <div class="tab active" data-tab="scraper">
+                    Scraper
+                </div>
+                <div class="tab" data-tab="results">
+                    Results
+                </div>
+
+                <div class="tab-spacer"></div>
+
+                <div class="tab" data-tab="content-extraction">
+                    Content Extraction
+                </div>
+                <div class="tab" data-tab="extraction-results">
+                    Extraction Results
+                </div>
+                <div class="tab" data-tab="settings">
+                    Settings
+                </div>
+                <div class="tab" data-tab="logs">
+                    Console
+                </div>
+            </div>
+        </div>
+
+        <!-- Main content area -->
+        <div class="main-content">
+            <!-- Scraper Tab -->
+            <div class="tab-content active" id="scraper">
+                <h1>Web Scraper</h1>
+                
+                <div class="card">
+                    <div class="form-row">
+                        <div class="form-group" style="flex: 3;">
+                            <label for="start-url">Start URL:</label>
+                            <input type="url" id="start-url" placeholder="https://example.com" required>
+                        </div>
+                        
+                        <div class="form-group" style="flex: 1;">
+                            <label for="max-depth">Max Depth:</label>
+                            <input type="number" id="max-depth" value="3" min="1" max="10">
+                        </div>
+                        
+                        <div class="form-group" style="flex: 1;">
+                            <label for="max-pages">Max Pages:</label>
+                            <input type="number" id="max-pages" value="100" min="1">
+                        </div>
+                    </div>
+                    
+                    <div class="collapsible">Crawling Options</div>
+                    <div class="collapsible-content">
+                        <div class="checkbox-group">
+                            <div class="form-group checkbox">
+                                <input type="checkbox" id="respect-robots" checked>
+                                <label for="respect-robots">Respect robots.txt</label>
+                            </div>
+                            
+                            <div class="form-group checkbox">
+                                <input type="checkbox" id="follow-redirects" checked>
+                                <label for="follow-redirects">Follow Redirects</label>
+                            </div>
+                            
+                            <div class="form-group checkbox">
+                                <input type="checkbox" id="filter-domains" checked>
+                                <label for="filter-domains">Stay on Same Domain</label>
+                            </div>
+                            
+                            <div class="form-group checkbox">
+                                <input type="checkbox" id="include-subdomains">
+                                <label for="include-subdomains">Include Subdomains</label>
+                            </div>
+                            
+                            <div class="form-group checkbox">
+                                <input type="checkbox" id="ignore-query-params">
+                                <label for="ignore-query-params">Ignore Query Parameters</label>
+                            </div>
+                            
+                            <div class="form-group checkbox">
+                                <input type="checkbox" id="ignore-hash-fragments" checked>
+                                <label for="ignore-hash-fragments">Ignore Hash Fragments</label>
+                            </div>
+                            
+                            <div class="form-group checkbox">
+                                <input type="checkbox" id="crawl-sitemap" checked>
+                                <label for="crawl-sitemap">Use Sitemap.xml</label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="delay">Request Delay (ms):</label>
+                                <input type="number" id="delay" value="200" min="0">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="timeout">Request Timeout (ms):</label>
+                                <input type="number" id="timeout" value="10000" min="1000">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="concurrency">Concurrent Requests:</label>
+                                <input type="number" id="concurrency" value="1" min="1" max="10">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="collapsible">Content Handling</div>
+                    <div class="collapsible-content collapsed">
+                        <div class="form-group checkbox">
+                            <input type="checkbox" id="handle-dynamic">
+                            <label for="handle-dynamic">Handle Dynamic Content</label>
+                        </div>
+                        
+                        <div class="browser-options" style="display: none; padding-left: 15px; margin-top: 5px;">
+                            <div class="form-group checkbox">
+                                <input type="checkbox" id="browser-headless" checked>
+                                <label for="browser-headless">Headless Mode</label>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="browser-timeout">Browser Timeout (ms):</label>
+                                <input type="number" id="browser-timeout" value="30000" min="5000">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group checkbox">
+                            <input type="checkbox" id="download-media">
+                            <label for="download-media">Download Media Files</label>
+                        </div>
+                        
+                        <div class="media-options" style="display: none; padding-left: 15px; margin-top: 5px;">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="save-directory">Save Directory:</label>
+                                    <input type="text" id="save-directory" value="./downloads">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="media-types">Media Types (comma separated):</label>
+                                    <input type="text" id="media-types" value="jpg,jpeg,png,gif,pdf">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="collapsible">URL Filters</div>
+                    <div class="collapsible-content collapsed">
+                        <div class="form-group">
+                            <label for="include-patterns">URL Patterns to Include (one per line):</label>
+                            <textarea id="include-patterns" rows="2" placeholder="example.com/products/.*"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="exclude-patterns">URL Patterns to Exclude (one per line):</label>
+                            <textarea id="exclude-patterns" rows="2" placeholder="example.com/admin/.*"></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="collapsible">Proxy & Headers</div>
+                    <div class="collapsible-content collapsed">
+                        <div class="form-group checkbox">
+                            <input type="checkbox" id="use-proxy">
+                            <label for="use-proxy">Use Proxy</label>
+                        </div>
+                        
+                        <div class="proxy-options" style="display: none; padding-left: 15px; margin-top: 5px;">
+                            <div class="form-group">
+                                <label for="proxies">Proxies (one per line):</label>
+                                <textarea id="proxies" rows="2" placeholder="http://proxy1:8080"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="user-agent">User Agent:</label>
+                                <input type="text" id="user-agent" value="Argos">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="custom-headers">Custom Headers (JSON):</label>
+                            <textarea id="custom-headers" rows="2" placeholder='{"Accept-Language": "en-US,en;q=0.9"}'></textarea>
+                        </div>
+                    </div>
+                    
+                    <!-- Captcha Settings (Collapsible) -->
+                    <div class="collapsible">Captcha Bypass</div>
+                    <div class="collapsible-content collapsed" id="captcha-settings-content">
+                        <div class="form-group checkbox">
+                            <input type="checkbox" id="captcha-bypass-active" checked>
+                            <label for="captcha-bypass-active">Enable Captcha Bypass</label>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="captcha-strategy">Active Strategy:</label>
+                            <select id="captcha-strategy">
+                                <option value="auto" selected>Auto (Best Method)</option>
+                                <option value="passive">Passive (Browser Emulation Only)</option>
+                                <option value="active">Active (Try All Methods)</option>
+                                <option value="external">External (Service APIs Only)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="compact-tabs" id="captcha-method-tabs">
+                            <div class="compact-tab active" data-tab="bypass-methods">Methods</div>
+                            <div class="compact-tab" data-tab="external-services">External Services</div>
+                            <div class="compact-tab" data-tab="user-agents">User Agents</div>
+                        </div>
+                        
+                        <div class="compact-tab-content active" id="bypass-methods">
+                            <div class="checkbox-group">
+                                <div class="form-group checkbox">
+                                    <input type="checkbox" id="headless-emulation" checked>
+                                    <label for="headless-emulation">Headless Emulation</label>
+                                </div>
+                                
+                                <div class="form-group checkbox">
+                                    <input type="checkbox" id="user-agent-spoofing" checked>
+                                    <label for="user-agent-spoofing">User Agent Spoofing</label>
+                                </div>
+                                
+                                <div class="form-group checkbox">
+                                    <input type="checkbox" id="cookie-management" checked>
+                                    <label for="cookie-management">Cookie Management</label>
+                                </div>
+                                
+                                <div class="form-group checkbox">
+                                    <input type="checkbox" id="proxy-rotation">
+                                    <label for="proxy-rotation">Proxy Rotation</label>
+                                </div>
+                                
+                                <div class="form-group checkbox">
+                                    <input type="checkbox" id="timing-manipulation" checked>
+                                    <label for="timing-manipulation">Timing Manipulation</label>
+                                </div>
+                                
+                                <div class="form-group checkbox">
+                                    <input type="checkbox" id="canvas-fingerprint-spoofing" checked>
+                                    <label for="canvas-fingerprint-spoofing">Canvas Fingerprint Spoofing</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="compact-tab-content" id="external-services">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="2captcha-key">2Captcha API Key:</label>
+                                    <input type="text" id="2captcha-key" placeholder="Enter API key">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="anticaptcha-key">AntiCaptcha API Key:</label>
+                                    <input type="text" id="anticaptcha-key" placeholder="Enter API key">
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="capmonster-key">CapMonster API Key:</label>
+                                    <input type="text" id="capmonster-key" placeholder="Enter API key">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="captchaai-key">CaptchaAI API Key:</label>
+                                    <input type="text" id="captchaai-key" placeholder="Enter API key">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="compact-tab-content" id="user-agents">
+                            <div class="form-group">
+                                <label for="user-agents">User Agents (one per line):</label>
+                                <textarea id="user-agents" rows="3">Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36
+Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15
+Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36</textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="captcha-retries">Maximum Retries:</label>
+                                <input type="number" id="captcha-retries" value="3" min="1" max="10">
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 10px;">
+                            <button id="test-captcha-settings" class="secondary">Test Captcha Bypass</button>
+                            <button id="reset-captcha-settings" class="secondary">Reset Captcha Settings</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Advanced Scraper Settings (Collapsible) -->
+                    <div class="collapsible">Advanced Scraper</div>
+                    <div class="collapsible-content collapsed">
+                        <div class="form-group checkbox">
+                            <input type="checkbox" id="use-advanced-scraper" checked>
+                            <label for="use-advanced-scraper">Use Advanced Scraper</label>
+                        </div>
+                        
+                        <div id="advanced-scraper-options" class="nested-settings">
+                            <div class="compact-tabs" id="advanced-scraper-tabs">
+                                <div class="compact-tab active" data-tab="content-selection">Content</div>
+                                <div class="compact-tab" data-tab="extraction-options">Extraction</div>
+                                <div class="compact-tab" data-tab="dynamic-content">Dynamic</div>
+                                <div class="compact-tab" data-tab="pagination-options">Pagination</div>
+                                <div class="compact-tab" data-tab="output-options">Output</div>
+                                <div class="compact-tab" data-tab="auth-options">Auth</div>
+                            </div>
+                            
+                            <!-- Content Selection Tab -->
+                            <div class="compact-tab-content active" id="content-selection">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="selector-title">Title Selector:</label>
+                                        <input type="text" id="selector-title" value="title">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="selector-content">Content Selector:</label>
+                                        <input type="text" id="selector-content" value="body">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="selector-links">Links Selector:</label>
+                                        <input type="text" id="selector-links" value="a">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="selector-images">Images Selector:</label>
+                                        <input type="text" id="selector-images" value="img">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="selector-headings">Headings Selector:</label>
+                                        <input type="text" id="selector-headings" value="h1, h2, h3, h4, h5, h6">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="selector-paragraphs">Paragraphs Selector:</label>
+                                        <input type="text" id="selector-paragraphs" value="p">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="custom-selectors">Custom Selectors (JSON):</label>
+                                    <textarea id="custom-selectors" rows="2" placeholder='[{"name": "prices", "selector": ".price", "type": "text"}]'></textarea>
+                                </div>
+                            </div>
+                            
+                            <!-- Extraction Options Tab -->
+                            <div class="compact-tab-content" id="extraction-options">
+                                <div class="checkbox-group">
+                                    <div class="form-group checkbox">
+                                        <input type="checkbox" id="remove-scripts" checked>
+                                        <label for="remove-scripts">Remove Scripts</label>
+                                    </div>
+                                    
+                                    <div class="form-group checkbox">
+                                        <input type="checkbox" id="remove-styles" checked>
+                                        <label for="remove-styles">Remove Styles</label>
+                                    </div>
+                                    
+                                    <div class="form-group checkbox">
+                                        <input type="checkbox" id="remove-comments" checked>
+                                        <label for="remove-comments">Remove Comments</label>
+                                    </div>
+                                    
+                                    <div class="form-group checkbox">
+                                        <input type="checkbox" id="normalize-whitespace" checked>
+                                        <label for="normalize-whitespace">Normalize Whitespace</label>
+                                    </div>
+                                    
+                                    <div class="form-group checkbox">
+                                        <input type="checkbox" id="extract-metadata" checked>
+                                        <label for="extract-metadata">Extract Metadata</label>
+                                    </div>
+                                    
+                                    <div class="form-group checkbox">
+                                        <input type="checkbox" id="extract-structured-data" checked>
+                                        <label for="extract-structured-data">Extract Structured Data</label>
+                                    </div>
+                                </div>
+                                
+                                <div class="checkbox-group">
+                                    <div class="form-group checkbox">
+                                        <input type="checkbox" id="enable-data-transformation" checked>
+                                        <label for="enable-data-transformation">Transform Data</label>
+                                    </div>
+                                    
+                                    <div class="form-group checkbox">
+                                        <input type="checkbox" id="trim-text" checked>
+                                        <label for="trim-text">Trim Text</label>
+                                    </div>
+                                    
+                                    <div class="form-group checkbox">
+                                        <input type="checkbox" id="normalize-spaces" checked>
+                                        <label for="normalize-spaces">Normalize Spaces</label>
+                                    </div>
+                                    
+                                    <div class="form-group checkbox">
+                                        <input type="checkbox" id="remove-empty" checked>
+                                        <label for="remove-empty">Remove Empty Values</label>
+                                    </div>
+                                    
+                                    <div class="form-group checkbox">
+                                        <input type="checkbox" id="sanitize-content" checked>
+                                        <label for="sanitize-content">Sanitize Content</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Dynamic Content Tab -->
+                            <div class="compact-tab-content" id="dynamic-content">
+                                <div class="form-group checkbox">
+                                    <input type="checkbox" id="use-dynamic-rendering">
+                                    <label for="use-dynamic-rendering">Use Dynamic Rendering (Puppeteer)</label>
+                                </div>
+                                
+                                <div id="dynamic-options" style="display: none;">
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="wait-until">Wait Until:</label>
+                                            <select id="wait-until">
+                                                <option value="load">load</option>
+                                                <option value="domcontentloaded">domcontentloaded</option>
+                                                <option value="networkidle0">networkidle0</option>
+                                                <option value="networkidle2" selected>networkidle2</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="browser-timeout">Timeout (ms):</label>
+                                            <input type="number" id="browser-timeout" value="30000" min="1000">
+                                        </div>
+                                        
+                                        <div class="form-group checkbox" style="align-self: flex-end;">
+                                            <input type="checkbox" id="scroll-page" checked>
+                                            <label for="scroll-page">Auto-Scroll</label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="block-resources">Block Resources:</label>
+                                        <input type="text" id="block-resources" value="image,stylesheet,font,media">
+                                    </div>
+                                    
+                                    <div class="form-group checkbox">
+                                        <input type="checkbox" id="enable-infinite-scroll">
+                                        <label for="enable-infinite-scroll">Handle Infinite Scroll</label>
+                                        
+                                        <div id="infinite-scroll-options" style="display: none; margin-top: 5px;">
+                                            <div class="form-row">
+                                                <div class="form-group">
+                                                    <label for="infinite-scroll-selector">Item Selector:</label>
+                                                    <input type="text" id="infinite-scroll-selector" value=".item">
+                                                </div>
+                                                
+                                                <div class="form-group">
+                                                    <label for="scroll-attempts">Attempts:</label>
+                                                    <input type="number" id="scroll-attempts" value="5" min="1" max="20">
+                                                </div>
+                                                
+                                                <div class="form-group">
+                                                    <label for="scroll-delay">Delay (ms):</label>
+                                                    <input type="number" id="scroll-delay" value="1000" min="100">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Pagination Tab -->
+                            <div class="compact-tab-content" id="pagination-options">
+                                <div class="form-group checkbox">
+                                    <input type="checkbox" id="enable-pagination">
+                                    <label for="enable-pagination">Handle Pagination</label>
+                                </div>
+                                
+                                <div id="pagination-options-content" style="display: none;">
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="next-page-selector">Next Page Selector:</label>
+                                            <input type="text" id="next-page-selector" value="a.next, a.pagination-next">
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="max-pages">Maximum Pages:</label>
+                                            <input type="number" id="max-pages" value="5" min="1" max="100">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Output Options Tab -->
+                            <div class="compact-tab-content" id="output-options">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="output-format">Output Format:</label>
+                                        <select id="output-format">
+                                            <option value="json" selected>JSON</option>
+                                            <option value="csv">CSV</option>
+                                            <option value="html">HTML</option>
+                                            <option value="text">Plain Text</option>
+                                            <option value="markdown">Markdown</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group checkbox" style="align-self: flex-end;">
+                                        <input type="checkbox" id="prettify" checked>
+                                        <label for="prettify">Prettify Output</label>
+                                    </div>
+                                </div>
+                                
+                                <div class="checkbox-group">
+                                    <div class="form-group checkbox">
+                                        <input type="checkbox" id="include-html">
+                                        <label for="include-html">Include Full HTML</label>
+                                    </div>
+                                    
+                                    <div class="form-group checkbox">
+                                        <input type="checkbox" id="include-metadata" checked>
+                                        <label for="include-metadata">Include Metadata</label>
+                                    </div>
+                                    
+                                    <div class="form-group checkbox">
+                                        <input type="checkbox" id="take-screenshot">
+                                        <label for="take-screenshot">Take Screenshot</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Authentication Tab -->
+                            <div class="compact-tab-content" id="auth-options">
+                                <div class="form-group checkbox">
+                                    <input type="checkbox" id="enable-authentication">
+                                    <label for="enable-authentication">Site Requires Authentication</label>
+                                </div>
+                                
+                                <div id="authentication-options" style="display: none;">
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="auth-type">Authentication Type:</label>
+                                            <select id="auth-type">
+                                                <option value="form" selected>Form Login</option>
+                                                <option value="basic">HTTP Basic</option>
+                                                <option value="cookie">Cookies</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    <div id="form-auth-options">
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label for="form-selector">Form Selector:</label>
+                                                <input type="text" id="form-selector" value="form">
+                                            </div>
+                                            
+                                            <div class="form-group">
+                                                <label for="submit-selector">Submit Button:</label>
+                                                <input type="text" id="submit-selector" value='button[type="submit"]'>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label for="username-selector">Username Field:</label>
+                                                <input type="text" id="username-selector" value='input[name="username"]'>
+                                            </div>
+                                            
+                                            <div class="form-group">
+                                                <label for="password-selector">Password Field:</label>
+                                                <input type="text" id="password-selector" value='input[name="password"]'>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="auth-username">Username:</label>
+                                            <input type="text" id="auth-username">
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="auth-password">Password:</label>
+                                            <input type="password" id="auth-password">
+                                        </div>
+                                    </div>
+                                    
+                                    <div id="cookie-auth-options" style="display: none;">
+                                        <div class="form-group">
+                                            <label for="auth-cookies">Authentication Cookies (JSON):</label>
+                                            <textarea id="auth-cookies" rows="2" placeholder='[{"name": "session", "value": "abc123"}]'></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="button-group" style="margin-top: 15px;">
+                        <button id="start-button" class="primary">Start Scraping</button>
+                        <button id="stop-button" class="secondary" disabled>Stop</button>
+                        <button id="reset-button" class="secondary">Reset</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Results Tab -->
+            <div class="tab-content" id="results">
+                <h1>Scraping Results</h1>
+                
+                <div class="card">
+                    <h2>Summary</h2>
+                    <div class="results-summary">
+                        <div class="summary-item">
+                            <h3>Pages Crawled</h3>
+                            <div class="summary-value" id="pages-crawled">0</div>
+                        </div>
+                        <div class="summary-item">
+                            <h3>Links Found</h3>
+                            <div class="summary-value" id="links-found">0</div>
+                        </div>
+                        <div class="summary-item">
+                            <h3>Media Files</h3>
+                            <div class="summary-value" id="media-files">0</div>
+                        </div>
+                        <div class="summary-item">
+                            <h3>Errors</h3>
+                            <div class="summary-value" id="error-count">0</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h2>Scraped Data</h2>
+                    <div class="results-container">
+                        <table id="results-table">
+                            <thead>
+                                <tr>
+                                    <th>URL</th>
+                                    <th>Title</th>
+                                    <th>Content Type</th>
+                                    <th>Data Size</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Results will be populated here -->
+                                <tr>
+                                    <td colspan="4" class="empty-message">No data available</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button id="export-csv" class="secondary">Export CSV</button>
+                        <button id="export-json" class="secondary">Export JSON</button>
+                        <button id="clear-results" class="secondary">Clear Results</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Settings Tab -->
+            <div class="tab-content" id="settings">
+                <h1>Settings</h1>
+                
+                <div class="card">
+                    <h2>Application Settings</h2>
+                    <div class="form-group">
+                        <label for="default-save-location">Default Save Location:</label>
+                        <input type="text" id="default-save-location" value="./downloads">
+                    </div>
+                    <div class="form-group checkbox">
+                        <input type="checkbox" id="auto-save-results">
+                        <label for="auto-save-results">Auto-save Results</label>
+                    </div>
+                    <div class="form-group checkbox">
+                        <input type="checkbox" id="show-dev-tools">
+                        <label for="show-dev-tools">Show Developer Tools</label>
+                    </div>
+                    <div class="form-group">
+                        <label for="theme-selector">Theme</label>
+                        <div class="select-wrapper cyber-enhanced">
+                            <select id="theme-selector" name="theme-selector">
+                                <option value="main.css">Cyberpunk (Default)</option>
+                                <option value="dark.css">Dark Horizon</option>
+                                <option value="pipboy.css">Pip-Boy</option>
+                            </select>
+                        </div>
+                        <small class="form-text">Change the application's visual theme. Changes apply immediately.</small>
+                    </div>
+                </div>
+                
+                <div class="button-group">
+                    <button id="save-settings" class="primary">Save Settings</button>
+                    <button id="reset-settings" class="secondary">Reset to Default</button>
+                </div>
+            </div>
+            
+            <!-- Logs Tab -->
+            <div class="tab-content" id="logs">
+                <h1>Activity Logs</h1>
+                
+                <div class="card logs-container">
+                    <div class="log-controls">
+                        <button id="clear-logs" class="secondary">Clear Logs</button>
+                        <select id="log-level">
+                            <option value="all">All Logs</option>
+                            <option value="info">Info</option>
+                            <option value="warning">Warnings</option>
+                            <option value="error">Errors</option>
+                        </select>
+                    </div>
+                    <div class="logs" id="log-output">
+                        <!-- Logs will be displayed here -->
+                        <div class="log-entry info">
+                            <span class="log-time">2025-05-06 12:00:00</span>
+                            <span class="log-level">INFO</span>
+                            <span class="log-message">Application started</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Extraction Tab -->
+            <div id="content-extraction" class="tab-content">
+                <h1>Content Extraction</h1>
+                
+                <div class="card">
+                    <h2>Extract Specific Content</h2>
+                    <p>Extract specific types of information from websites such as emails, phone numbers, locations, or prices.</p>
+                    
+                    <div class="form-group">
+                        <label for="content-target-url">Target URL</label>
+                        <input type="url" id="content-target-url" placeholder="https://example.com" autocomplete="off">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="content-extraction-type">Content Type</label>
+                        <select id="content-extraction-type">
+                            <option value="">Select content type...</option>
+                            <option value="email">Email Addresses</option>
+                            <option value="phone">Phone Numbers</option>
+                            <option value="location">Business Addresses</option>
+                            <option value="price">Product Prices</option>
+                        </select>
+                    </div>
+                    
+                    <div class="collapsible">Advanced Extraction Options</div>
+                    <div class="collapsible-content collapsed">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="content-max-depth">Max Crawl Depth</label>
+                                <input type="number" id="content-max-depth" min="0" max="10" value="2">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="content-concurrent-requests">Concurrent Requests</label>
+                                <input type="number" id="content-concurrent-requests" min="1" max="10" value="3">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="content-timeout">Request Timeout (ms)</label>
+                                <input type="number" id="content-timeout" min="1000" value="30000">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group checkbox">
+                                <input type="checkbox" id="content-follow-redirects" checked>
+                                <label for="content-follow-redirects">Follow Redirects</label>
+                            </div>
+                            
+                            <div class="form-group checkbox">
+                                <input type="checkbox" id="content-use-proxy">
+                                <label for="content-use-proxy">Use Proxy</label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group" id="proxy-config-container" style="display: none;">
+                            <label for="content-proxy-config">Proxy Configuration</label>
+                            <input type="text" id="content-proxy-config" placeholder="http://user:pass@host:port">
+                        </div>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button id="start-extraction-button" class="primary">Start Extraction</button>
+                        <button id="stop-extraction-button" class="secondary" disabled>Stop</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Extraction Results Tab -->
+            <div id="extraction-results" class="tab-content">
+                <h1>Extraction Results</h1>
+                
+                <div class="results-summary">
+                    <div class="summary-item">
+                        <h3>Items Found</h3>
+                        <div class="summary-value" id="extraction-count">0</div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="button-group" style="margin-top: 0; margin-bottom: 15px;">
+                        <button id="export-extraction-csv" class="secondary">Export CSV</button>
+                        <button id="export-extraction-json" class="secondary">Export JSON</button>
+                        <button id="clear-extraction-results" class="secondary">Clear Results</button>
+                    </div>
+                    
+                    <div class="results-container">
+                        <table id="extraction-results-table">
+                            <thead>
+                                <tr>
+                                    <th>Value</th>
+                                    <th>Type</th>
+                                    <th>Related Info</th>
+                                    <th>Source URL</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="4" class="empty-message">No content extracted yet</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="app-version">v1.0.0</div>
+    </div>
+
+    <script src="renderer.js"></script>
+    <script>
+  // Single initialization script for collapsibles (remove any duplicate handlers)
+  document.addEventListener('DOMContentLoaded', function() {
+    console.log('Initializing all UI components');
+    
+    // Initialize collapsibles (only once)
+    function initializeAllCollapsibles() {
+      console.log('Setting up collapsibles');
+      const collapsibles = document.querySelectorAll('.collapsible');
+      
+      collapsibles.forEach((collapsible, index) => {
+        // Remove any existing click handlers first
+        collapsible.onclick = null;
+        const cloneCollapsible = collapsible.cloneNode(true);
+        collapsible.parentNode.replaceChild(cloneCollapsible, collapsible);
+        
+        // Get the content element that follows this collapsible
+        const content = cloneCollapsible.nextElementSibling;
+        
+        // Make sure it's a collapsible-content element
+        if (content && content.classList.contains('collapsible-content')) {
+          console.log(`Setting up collapsible #${index}`);
+          
+          // Set initial state - first section expanded, others collapsed
+          if (index > 0) {
+            content.classList.add('collapsed');
+            cloneCollapsible.classList.add('collapsed');
+          }
+          
+          // Add click handler to toggle visibility
+          cloneCollapsible.onclick = function(event) {
+            console.log(`Clicked collapsible #${index}`);
+            event.preventDefault();
+            this.classList.toggle('collapsed');
+            content.classList.toggle('collapsed');
+          };
+        } else {
+          console.warn(`No collapsible content found for collapsible #${index}`);
+        }
+      });
+    }
+    
+    // Initialize compact tabs
+    function initializeCompactTabs() {
+      document.querySelectorAll('.compact-tabs').forEach(tabContainer => {
+        const tabs = tabContainer.querySelectorAll('.compact-tab');
+        const tabContents = tabContainer.parentElement.querySelectorAll('.compact-tab-content');
+        
+        tabs.forEach(tab => {
+          tab.addEventListener('click', function(event) {
+            // Stop event propagation to prevent triggering collapsible toggle
+            event.stopPropagation();
+            
+            const tabId = this.getAttribute('data-tab');
+            
+            // Update active tab
+            tabs.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Show selected content
+            tabContents.forEach(content => {
+              if (content.id === tabId) {
+                content.classList.add('active');
+                content.style.display = 'block';
+              } else {
+                content.classList.remove('active');
+                content.style.display = 'none';
+              }
+            });
+          });
+        });
+      });
+    }
+    
+    // Initialize tab switching
+    function initializeTabSwitching() {
+      const tabs = document.querySelectorAll('.tab');
+      const tabContents = document.querySelectorAll('.tab-content');
+      
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          const tabId = tab.getAttribute('data-tab');
+          
+          // Update active tab
+          tabs.forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          
+          // Show selected tab content
+          tabContents.forEach(content => {
+            if (content.id === tabId) {
+              content.classList.add('active');
+            } else {
+              content.classList.remove('active');
+            }
+          });
+        });
+      });
+    }
+    
+    // Initialize form toggles
+    function initializeFormToggles() {
+      // Handle dynamic content options
+      const handleDynamic = document.getElementById('handle-dynamic');
+      const browserOptions = document.querySelector('.browser-options');
+      
+      if (handleDynamic && browserOptions) {
+        handleDynamic.addEventListener('change', function() {
+          browserOptions.style.display = this.checked ? 'block' : 'none';
+        });
+      }
+      
+      // Handle media download options
+      const downloadMedia = document.getElementById('download-media');
+      const mediaOptions = document.querySelector('.media-options');
+      
+      if (downloadMedia && mediaOptions) {
+        downloadMedia.addEventListener('change', function() {
+          mediaOptions.style.display = this.checked ? 'block' : 'none';
+        });
+      }
+      
+      // Handle proxy options
+      const useProxy = document.getElementById('use-proxy');
+      const proxyOptions = document.querySelector('.proxy-options');
+      
+      if (useProxy && proxyOptions) {
+        useProxy.addEventListener('change', function() {
+          proxyOptions.style.display = this.checked ? 'block' : 'none';
+        });
+      }
+      
+      // Content extraction proxy options
+      const contentUseProxy = document.getElementById('content-use-proxy');
+      const proxyConfigContainer = document.getElementById('proxy-config-container');
+      
+      if (contentUseProxy && proxyConfigContainer) {
+        contentUseProxy.addEventListener('change', function() {
+          proxyConfigContainer.style.display = this.checked ? 'block' : 'none';
+        });
+      }
+      
+      // Captcha bypass active toggle
+      const captchaActive = document.getElementById('captcha-bypass-active');
+      if (captchaActive) {
+        captchaActive.addEventListener('change', function() {
+          const isEnabled = this.checked;
+          const captchaInputs = document.querySelectorAll('#captcha-settings input:not(#captcha-bypass-active), #captcha-settings select');
+          captchaInputs.forEach(input => {
+            input.disabled = !isEnabled;
+          });
+          
+          const captchaButtons = document.querySelectorAll('#captcha-settings button');
+          captchaButtons.forEach(button => {
+            button.disabled = !isEnabled;
+          });
+        });
+      }
+    }
+    
+    // Run all initializations once
+    initializeTabSwitching();
+    initializeFormToggles();
+    initializeCompactTabs();
+    initializeAllCollapsibles();
+  });
+
+  // IMPORTANT: Remove any other script that initializes collapsibles at the end of your file!
+  // The collapsible initialization is now handled by the code above.
+</script>
+</body>
+</html>
