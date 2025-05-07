@@ -1,4 +1,9 @@
 node_modules
+.DS_Store
+.env
+*.log
+dist/
+build/
 
 src/utils/advanced-scraper.js
 src/utils/basic-scraper.js
